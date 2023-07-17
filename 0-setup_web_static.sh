@@ -1,18 +1,39 @@
 #!/usr/bin/env bash
-# Setup a web servers for the deployment of web_static.
-apt update -y
-apt install -y nginx
+# script that sets up your web servers for the deployment of web_static/
+
+# install nginx if not installed already
+if ! command -v nginx >/dev/null 2>&1;then
+    apt-get update
+    apt-get install -y nginx
+fi
+
 mkdir -p /data/web_static/releases/test/
 mkdir -p /data/web_static/shared/
+
+# create an html
 echo "<!DOCTYPE html>
 <html>
-  <head>
-  </head>
-  <body>
-    <p>Nginx server test</p>
-  </body>
-</html>" | tee /data/web_static/releases/test/index.html
+<head>
+</head>
+<body>
+<p>Nginx server test</p>
+</body>
+</html>" | tee /data/web_static/releases/index.html
+
+# create sym link
+if [ -L /data/web_static/current ]; then
+    rm /data/web_static/current
+fi
 ln -sf /data/web_static/releases/test/ /data/web_static/current
-chown -R ubuntu:ubuntu /data
-sudo sed -i '39 i\ \tlocation /hbnb_static {\n\t\talias /data/web_static/current;\n\t}\n' /etc/nginx/sites-enabled/default
-sudo service nginx restart
+
+# give ownership of /data to ubuntu and group
+chown -R ubuntu:ubuntu /data/
+
+# update nginx config
+config_file="/etc/nginx/sites-enabled/default"
+
+# add alias to serve content
+sed -i '39 i\ \tlocation /hbnb_static {\n\t\talias /data/web_static/current;\n\t}\n' "$config_file"
+
+# restart nginx
+service nginx restart
