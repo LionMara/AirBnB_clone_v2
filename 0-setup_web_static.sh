@@ -21,9 +21,6 @@ echo "<!DOCTYPE html>
 </html>" | tee /data/web_static/releases/index.html
 
 # create sym link
-if [ -L /data/web_static/current ]; then
-    rm /data/web_static/current
-fi
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # give ownership of /data to ubuntu and group
