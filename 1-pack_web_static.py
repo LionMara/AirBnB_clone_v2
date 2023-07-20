@@ -6,20 +6,16 @@
 
 from fabric.api import local
 from datetime import datetime
+import time
+
 
 def do_pack():
-    """ Generates a .tgz archive"""
-
+    """Generate an tgz archive from web_static folder"""
     try:
-        now = datetime.now()
-        archive_name = "web_static_{}{}{}{}{}{}.tgz".format(
-            now.year,now.month, now.day, now.hour, now.minute,now.second)
         local("mkdir -p versions")
-        local("tar -czvf versions/{} web_static".format(archive_name))
-
-        archive_path ="versions/{}".format(archive_name)
-        archive_size = local("du -sh {}".format(archive_path),capture=True).split()[0]
-        print("{} packed: {} -> {}Bytes".format(archive_path, archive_size, archive_size))
-        return archive_path
+        local("tar -cvzf versions/web_static_{}.tgz web_static/".
+              format(time.strftime("%Y%m%d%H%M%S")))
+        return ("versions/web_static_{}.tgz".format(time.
+                                                    strftime("%Y%m%d%H%M%S")))
     except:
         return None
