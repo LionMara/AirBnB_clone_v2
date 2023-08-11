@@ -9,27 +9,27 @@ from models.amenity import Amenity
 from models.review import Review
 
 
-classes = {
-    'BaseModel': BaseModel,
-    'User': User,
-    'State': State,
-    'City': City,
-    'Amenity': Amenity,
-    'Place': Place,
-    'Review': Review
-}
-
 class FileStorage:
     ''' Defines the FileStorage Class '''
     __file_path = 'file.json'
     __objects = {}
+
+    classes = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Place': Place,
+        'Review': Review
+    }
 
     def all(self, cls=None):
         ''' returns dictionary of all created objects '''
         if not cls:
             return self.__objects
 
-        if cls not in classes.keys() and cls not in classes.values():
+        if cls not in self.classes.keys() and cls not in self.classes.values():
             return None
 
         cls = eval(cls) if type(cls) is str else cls

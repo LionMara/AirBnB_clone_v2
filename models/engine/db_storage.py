@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 ''' creates a new engine, db_storage '''
 from os import getenv
@@ -30,13 +31,14 @@ class DBStorage:
 
         if env == 'test':
             Base.metadata.drop_all(self.__engine)
+        self.classes = [State, City, User, Amenity, Place, Review]
 
     def all(self, cls=None):
         ''' returns dictionary of objects '''
         dict_of_objects = {}
 
         if cls is None:
-            for _class in classes:
+            for _class in self.classes:
                 list_of_objs = self.__session.query(_class).all()
 
                 for obj in list_of_objs:
@@ -46,7 +48,7 @@ class DBStorage:
             return dict_of_objects
 
         cls = eval(cls) if type(cls) is str else cls
-        if cls not in classes:
+        if cls not in self.classes:
             return None
 
         obj_list = self.__session.query(cls).all()

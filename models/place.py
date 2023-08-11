@@ -1,3 +1,4 @@
+"""class Place inherits from Base and BaseModel """
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from models import storage_type
